@@ -1,30 +1,33 @@
 package game.services;
 
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import game.GameManager;
 import game.GameManagerImpl;
-import game.models.*;
-
+import game.models.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.apache.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-
 @Api(value = "/", description = "Endpoint to User Service")
 @Path("/")
 
 public class GameService {
-    private GameManager gm;
-    final static Logger logger = Logger.getLogger(GameService.class);
+    private final GameManager gm;
+    //final static Logger logger = Logger.getLogger(GameService.class);
 
     public GameService() {
         this.gm = GameManagerImpl.getInstance();
