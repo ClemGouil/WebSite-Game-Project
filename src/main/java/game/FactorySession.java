@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class FactorySession {
-    
+
     public static Session openSession() {
 
 
@@ -22,7 +22,7 @@ public class FactorySession {
         try {
             conn =
                     DriverManager.getConnection("jdbc:mariadb://localhost:3306/gamedb",
-                            "dsa","hello");
+                            "root","mariadb");
 
         } catch (SQLException ex) {
             // handle any errors

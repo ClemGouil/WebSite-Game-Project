@@ -16,7 +16,7 @@ import io.swagger.jaxrs.config.BeanConfig;
  */
 public class Main {
     // Base URI the Grizzly HTTP server will listen on
-    public static final String BASE_URI = "http://147.83.7.205:80/GameApp/";
+    public static final String BASE_URI = "http://localhost:80/GameApp/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -32,7 +32,7 @@ public class Main {
 
         BeanConfig beanConfig = new BeanConfig();
 
-        beanConfig.setHost("147.83.7.205:80");
+        beanConfig.setHost("localhost:80");
         beanConfig.setBasePath("/GameApp");
         beanConfig.setContact("support@example.com");
         beanConfig.setDescription("REST API for Game Manager");
