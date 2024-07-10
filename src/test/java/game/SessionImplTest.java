@@ -1,13 +1,13 @@
 package game;
 
-import game.models.Item;
-import game.models.User;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import game.models.User;
 
 public class SessionImplTest {
 
@@ -109,36 +109,6 @@ public class SessionImplTest {
             Assert.assertTrue(herve);
             Assert.assertFalse(daniel);
             Assert.assertTrue(sarah);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-
-    @Test
-    public void createInventoryTest() throws SQLException {
-
-        Session session = null;
-
-        try {
-            session = FactorySession.openSession();
-            session.createInventory(Item.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-
-    @Test
-    public void deleteTest() {
-        Session session = null;
-        User user = new User("jordi@gmail.com", "1234", "Jordi");
-
-        try {
-            session = FactorySession.openSession();
-            session.delete(user);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

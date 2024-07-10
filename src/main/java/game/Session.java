@@ -11,8 +11,6 @@ public interface Session<E> {
     int getID (Object entity) throws SQLException;
     boolean update(Object object) throws SQLException;
     void delete(Object object);
-    void createInventory(Class myClass) throws NoSuchMethodException;
     List<Object> findAll(Class theClass) throws NoSuchMethodException;
-
     List<Object> findAll(Object object, List<String> args);
 }

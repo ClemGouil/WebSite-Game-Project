@@ -1,11 +1,5 @@
 package game;
 
-
-import game.models.Inventory;
-import game.models.Level;
-import game.util.ObjectHelper;
-import game.util.QueryHelper;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,8 +7,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import game.util.ObjectHelper;
+import game.util.QueryHelper;
 
 public class SessionImpl implements Session {
     private final Connection conn;
@@ -31,12 +28,12 @@ public class SessionImpl implements Session {
 
         try {
             pstm = conn.prepareStatement(insertQuery);
-            if (entity.getClass().equals(Inventory.class) || entity.getClass().equals(Level.class)) {
-                i = 1;
-            } else {
-                pstm.setObject(1, 0);
-                i = 2;
-            }
+            //if (entity.getClass().equals(Inventory.class) || entity.getClass().equals(Level.class)) {
+            //    i = 1;
+            //} else {
+            pstm.setObject(1, 0);
+            i = 2;
+            //}
 
             for (String field: ObjectHelper.getFields(entity)) {
                 pstm.setObject(i++, ObjectHelper.getter(entity, field));
@@ -163,37 +160,6 @@ public class SessionImpl implements Session {
             pstm.executeQuery();
 
         }  catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void createInventory(Class myClass) throws NoSuchMethodException {
-
-        PreparedStatement pstm = null;
-
-        List<Object> objects = this.findAll(myClass);
-        int n = objects.size();
-        String createQuery;
-
-        try {
-            String[] fields = ObjectHelper.getFields(objects.get(0));
-
-
-            StringBuffer sb = new StringBuffer();
-            sb.append("CREATE TABLE inventory");
-            sb.append(" (idUser INT, ");
-
-            for (int i = 0; i<n; i++) {
-                String value = (String) ObjectHelper.getter(objects.get(i), fields[0]);
-                sb.append("`" + value + "` INT DEFAULT 0, ");
-            }
-            sb.append("PRIMARY KEY (idUser)) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-            createQuery =  sb.toString();
-
-            pstm = conn.prepareStatement(createQuery);
-            pstm.executeQuery();
-
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }

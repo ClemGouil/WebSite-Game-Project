@@ -1,8 +1,5 @@
 package game.util;
 
-import game.models.Inventory;
-import game.models.Level;
-
 import java.lang.reflect.Constructor;
 import java.util.List;
 
@@ -104,9 +101,9 @@ public class QueryHelper {
         String [] fields = ObjectHelper.getFields(entity);
         int n = fields.length;
         int begin = 0;
-        if (entity.getClass().equals(Level.class)) {
-            begin = 1;
-        }
+        // if (entity.getClass().equals(Level.class)) {
+        //     begin = 1;
+        // }
 
         for (int i = begin; i < n-1; i++ ) {
             sb.append(fields[i]).append("=?, ");

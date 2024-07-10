@@ -8,16 +8,6 @@ public class User {
     String mail;
     String password;
     String username;
-    int lifePoint;
-    int coins;
-
-    public int getLifePoint() {
-        return lifePoint;
-    }
-
-    public void setLifePoint(Integer lifePoint) {
-        this.lifePoint = lifePoint;
-    }
 
     public User() {}
     public User(String mail, String password, String username) {
@@ -25,8 +15,6 @@ public class User {
         this.setMail(mail);
         this.setUsername(username);
         this.setPassword(password);
-        this.setLifePoint(100);
-        this.setCoins(100);
     }
 
     public String getMail() {
@@ -50,17 +38,9 @@ public class User {
         this.password=password;
     }
 
-    public int getCoins() {
-        return coins;
-    }
-
-    public void setCoins(Integer coins) {
-        this.coins = coins;
-    }
-
     @Override
     public String toString() {
-        return "User [mail=" + mail + ", username=" + username +", password=" + password + ", life points=" + lifePoint + "]";
+        return "User [mail=" + mail + ", username=" + username +", password=" + password + "]";
     }
     public boolean isEquals(User u) throws NoSuchMethodException {
         for (String field : ObjectHelper.getFields(this)){

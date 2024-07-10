@@ -1,27 +1,94 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-	<!--Ponemos el título a la pestaña-->
-    <title>Welcome to you WebApp</title>
-	<!--Conseguimos la fuente para estilizar-->
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-	<!--Creamos la referencia a la hoja de estilos para poder usarla-->
-    <link rel="stylesheet" href="assets/css/style.css">
-  </head>
-  <body>
-    <!--Hacemos que se vea el header llamando al documento-->
-    <header>
-        <!--Declaramos un enlace al directorio php-login-->
-        <a href="index.html">Your Web Game Name</a>
-     </header>
-	<!--Damos la bienvenida al usuario si no está vacía-->
-      <br>Welcome.
+<head>
+  <title>Ma page</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/index-styles.css">
+</head>
+<body>
+  <video autoplay muted loop class="video-background">
+    <source src="assets/ressource/background.mp4" type="video/mp4">
+    Votre navigateur ne supporte pas la vidéo HTML5.
+  </video>
+  <header> 
+    <div class="header-container">
+      <img src="assets/ressource/logo2.png" alt="Logo" class="logo">
+      <nav>
+        <ul>
+          <li><a href="#" onclick="showPage('home')">Accueil</a></li>
+          <li><a href="#" onclick="showPage('play')">Jouer</a></li>
+          <li><a href="#" onclick="showPage('forum')">Forum</a></li>
+        </ul>
+      </nav>
+      <div class="login-button"  id="login-button">
+        <a href="login.html">Se Connecter</a>
+      </div>
+      <div class="profile"  id="profile" style="display: none;">
+        <img src="assets/ressource/profile.jpg" alt="Profil" class="profile-image" href="login.html">
+      </div>
+      <div class="notif"  id="notif" style="display: none;">
+        <img src="assets/ressource/notif.png" alt="Notif" class="notif-image">
+      </div>
+    </div>
+  </header>
+  <div class="main-container">
+    <main>
+      <br>
+      <section id="profile-info" class="page">
+        <h2>Informations du Profil</h2>
+        <p>Nom : John Doe</p>
+        <p>Email : john.doe@example.com</p>l</section>
+      
+      <section id="home" class="page">
+        <div class="bodysection-container">
+          <h1>Bienvenue sur la page d'accueil</h1>
+          <br>
+          <div class="card-container">
+            <div class="card">
+              <img src="assets/ressource/Profile.jpg" alt="Photo de Personnage">
+              <h2>Harry Potter</h2>
+              <p>Description du personnage.</p>
+            </div>
+            <div class="card">
+                <img src="assets/ressource/Profile.jpg" alt="Photo de Personnage">
+                <h2>Hermione Granger</h2>
+                <p>Description du personnage.</p>
+            </div>
+        </div>
+      </div>
+      </section>
 
-	<!--Ofrecemos la opcion de registrarse o iniciar sesión en caso de no tener una variable usuario llena-->
-      <h1>Please Login or SignUp</h1>
-	<!--LLamamos a los documentos encargados de realizar dichos procesos-->
-      <a href="login.html">Login</a> or
-      <a href="signup.html">SignUp</a>
-  </body>
+      <section id="play" class="page">Page de jeu</section>
+
+      <section id="forum" class="page">
+        <h1>Soumettre une question : </h2>
+        <div class="form-container">
+          <form action="/submit-question" method="post">
+              <div class="form-group">
+                  <label for="title">Titre :</label>
+                  <input type="text" id="title" name="title" required>
+              </div>
+              <div class="form-group">
+                  <label for="description">Description :</label>
+                  <textarea id="description" name="description" required></textarea>
+              </div>
+              <div class="form-group">
+                  <button type="submit">Envoyer</button>
+              </div>
+          </form>
+      </div>
+      <h1>Questions déja posées : </h2>
+        <div class="question-card">
+          <img src="assets/ressource/Profile.jpg" alt="Photo de profil" class="profile-pic">
+          <div class="question-content">
+              <div class="username">Nom d'utilisateur</div>
+              <h3>Titre de la question</h3>
+              <p>Description de la question... (troncature si nécessaire)</p>
+          </div>
+      </div>
+      </section>
+    </main>
+  </div>
+  <script src="index-scripts.js"></script>
+</body>
 </html>
+

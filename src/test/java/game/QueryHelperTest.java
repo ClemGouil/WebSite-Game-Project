@@ -1,15 +1,13 @@
 package game;
 
-import game.models.Item;
-import game.models.Level;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
 import game.models.Question;
 import game.models.User;
 import game.util.QueryHelper;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class QueryHelperTest {
 
@@ -18,13 +16,6 @@ public class QueryHelperTest {
     public void testQuerySELECTID1() {
        // Assert.assertEquals("SELECT ID FROM User WHERE mail=?",
          //       QueryHelper.createQuerySELECTID(new User("marin@hotmail.com", "mdolle", "12a")));
-    }
-
-    @Test
-    public void testQuerySELECTID2() {
-        //Assert.assertEquals("SELECT ID FROM Item WHERE name=?",
-                //QueryHelper.createQuerySELECTID(new Item("sword", "cut your head", 10, 20, 90, "image.png")));
-        System.out.println(QueryHelper.createQuerySELECTbyID(new Level()));
     }
 
     @Test
