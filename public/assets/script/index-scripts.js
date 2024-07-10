@@ -21,7 +21,7 @@ function showPage(pageId) {
 
 function checkLoginStatus() {
   // Simuler l'état de connexion de l'utilisateur
-  var isLoggedIn = true; // Changez cette valeur pour tester
+  var isLoggedIn = false; // Changez cette valeur pour tester
 
   var loginButton = document.getElementById('login-button');
   var profile = document.getElementById('profile');

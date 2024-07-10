@@ -13,6 +13,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,7 @@ import java.util.List;
 
 public class GameService {
     private GameManager gm;
+    final static Logger logger = Logger.getLogger(GameService.class);
 
     public GameService() {
         this.gm = GameManagerImpl.getInstance();
@@ -111,7 +115,6 @@ public class GameService {
             @ApiResponse(code = 400, message = "User already exist for this mail")
 
     })
-
     @Path("/users/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
