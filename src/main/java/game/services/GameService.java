@@ -68,7 +68,7 @@ public class GameService {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
             @ApiResponse(code = 404, message = "User not found")
     })
-    @Path("/users/{mail}")
+    @Path("/users/{mail}&{password}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response authentificate(@PathParam("mail") String mail, @PathParam("password") String password) {
@@ -94,10 +94,10 @@ public class GameService {
     @Path("/users/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response logIn(VOCredentials credentials) {
+    public Response logIn(User user) {
         System.out.println("-----LOGIN-----");
-        System.out.println("Mail: "+ credentials.getMail());
-        User u = this.gm.loginUser(credentials);
+        System.out.println("Mail: "+ user.getMail());
+        User u = this.gm.loginUser(user);
         if (u==null)
             return Response.status(500).build();
         else

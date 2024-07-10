@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import game.models.User;
-import game.models.VOCredentials;
 
 public class GameManagerTest {
 
@@ -38,9 +37,9 @@ public class GameManagerTest {
     @Test
     public void authentificationTest() {
         GameManager gm = GameManagerImpl.getInstance();
-        VOCredentials v0 = new VOCredentials("mama@gmail.com", "oool");
-        VOCredentials v1 = new VOCredentials("mama@gmail.com", "zedfghj");
-        VOCredentials v2 = new VOCredentials("ooausi@gmail.com", "azertyui");
+        User v0 = new User("mama@gmail.com", "oool", "123");
+        User v1 = new User("mama@gmail.com", "zedfghj", "gejhdu");
+        User v2 = new User("ooausi@gmail.com", "azertyui", "hgshgs");
         User u = gm.loginUser(v0);
         User f1 = gm.loginUser(v1);
         User f2 = gm.loginUser(v2);

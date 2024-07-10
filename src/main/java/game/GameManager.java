@@ -3,7 +3,6 @@ package game;
 import java.util.List;
 
 import game.models.User;
-import game.models.VOCredentials;
 
 public interface GameManager {
 
@@ -12,9 +11,8 @@ public interface GameManager {
     public User addUser(User u);
     public User getUser (int id);
 
-    public User loginUser(VOCredentials credenciales);
+    public User loginUser(User user);
 
-    //public VOCredentials getCredentials(User u);
     public List<User> getUsers();
     public User deleteUser(String mail, String password);
     public User updateUser(User u);

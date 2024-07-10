@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import game.models.Message;
 import game.models.User;
-import game.models.VOCredentials;
 import game.util.PasswordSecurity;
 
 public class GameManagerImpl implements GameManager{
@@ -106,7 +105,6 @@ public class GameManagerImpl implements GameManager{
                 logger.info("user not found");
             } else {
                 u = this.getUser(id);
-
                 if (!(PasswordSecurity.decrypt(u.getPassword()).equals(password))) {
                     logger.warn("Password wrong");
                     return null;
@@ -124,8 +122,8 @@ public class GameManagerImpl implements GameManager{
     }
 
     @Override
-    public User loginUser(VOCredentials credenciales) {
-        return this.authentification(credenciales.getMail(), credenciales.getPassword());
+    public User loginUser(User user) {
+        return this.authentification(user.getMail(), user.getPassword());
     }
 
     @Override
