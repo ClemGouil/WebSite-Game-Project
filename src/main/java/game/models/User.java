@@ -42,6 +42,7 @@ public class User {
     public String toString() {
         return "User [mail=" + mail + ", username=" + username +", password=" + password + "]";
     }
+    
     public boolean isEquals(User u) throws NoSuchMethodException {
         for (String field : ObjectHelper.getFields(this)){
             try {

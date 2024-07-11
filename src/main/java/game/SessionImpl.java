@@ -10,11 +10,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import game.util.ObjectHelper;
 import game.util.QueryHelper;
 
 public class SessionImpl implements Session {
     private final Connection conn;
+    final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     public SessionImpl(Connection conn) {
         this.conn = conn;
@@ -158,55 +161,74 @@ public class SessionImpl implements Session {
             pstm.setObject(1, id);
 
             pstm.executeQuery();
-
+            logger.info(pstm);
         }  catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public List<Object> findAll(Class theClass) throws NoSuchMethodException {
-
         List<Object> objects = new ArrayList<>();
         PreparedStatement pstm = null;
-
+        ResultSet result = null;
+    
         try {
             Constructor[] ctors = theClass.getDeclaredConstructors();
             Constructor ctor = null;
             for (int i = 0; i < ctors.length; i++) {
                 ctor = ctors[i];
-                if (ctor.getGenericParameterTypes().length == 0)
+                if (ctor.getGenericParameterTypes().length == 0) {
                     break;
+                }
             }
-
+    
             ctor.setAccessible(true);
-
+    
             String selectQuery = QueryHelper.createQuerySELECTALL(theClass);
             pstm = conn.prepareStatement(selectQuery);
-            ResultSet result = pstm.executeQuery();
-
+            result = pstm.executeQuery();
+    
             while (result.next()) {
-                Object entity = (Object) ctor.newInstance();
+                Object entity = ctor.newInstance();
                 for (Field field : theClass.getDeclaredFields()) {
-
-                    Class param = field.getType();
-                    String type = param.getSimpleName();
-
-                    char[] arr = type.toCharArray();
-                    arr[0] = Character.toUpperCase(arr[0]);
-                    String newType = new String(arr);
-                    String method = "get" + newType;
-
-                    Method mth = result.getClass().getMethod(method, String.class);
-                    Object value = mth.invoke(result, field.getName());
-                    ObjectHelper.setter(entity, field.getName(), value);
+                    String fieldName = field.getName();
+                    Class<?> fieldType = field.getType();
+    
+                    // Récupère la valeur depuis le ResultSet en fonction du type de champ
+                    Object value;
+                    if (fieldType.equals(int.class) || fieldType.equals(Integer.class)) {
+                        value = result.getInt(fieldName);
+                    } else {
+                        // Gérez d'autres types si nécessaire
+                        value = result.getObject(fieldName); // Par défaut, récupère l'objet depuis la base de données
+                    }
+    
+                    // Utilisation de ObjectHelper pour setter l'attribut sur l'objet entity
+                    ObjectHelper.setter(entity, fieldName, value);
                 }
                 objects.add(entity);
             }
-
+    
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            // Fermeture des ressources (ResultSet, PreparedStatement)
+            if (result != null) {
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstm != null) {
+                try {
+                    pstm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-
+    
         return objects;
     }
 
@@ -259,6 +281,55 @@ public class SessionImpl implements Session {
             e.printStackTrace();
         }
 
+        return objects;
+    }
+
+    public List<Object> findAllFor(Class theClass, String fieldName, Object fieldValue) throws NoSuchMethodException {
+        List<Object> objects = new ArrayList<>();
+        PreparedStatement pstm = null;
+    
+        try {
+            Constructor<?>[] ctors = theClass.getDeclaredConstructors();
+            Constructor<?> ctor = null;
+            for (Constructor<?> c : ctors) {
+                if (c.getGenericParameterTypes().length == 0) {
+                    ctor = c;
+                    break;
+                }
+            }
+    
+            if (ctor != null) {
+                ctor.setAccessible(true);
+            }
+    
+            String selectQuery = QueryHelper.createQuerySELECTALL(theClass) + " WHERE " + fieldName + " = ?";
+            pstm = conn.prepareStatement(selectQuery);
+            pstm.setObject(1, fieldValue);
+    
+            ResultSet result = pstm.executeQuery();
+    
+            while (result.next()) {
+                Object entity = ctor.newInstance();
+                for (Field field : theClass.getDeclaredFields()) {
+                    field.setAccessible(true);
+                    Object value = result.getObject(field.getName());
+                    field.set(entity, value);
+                }
+                objects.add(entity);
+            }
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (pstm != null) {
+                try {
+                    pstm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    
         return objects;
     }
 

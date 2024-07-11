@@ -12,5 +12,6 @@ public interface Session<E> {
     boolean update(Object object) throws SQLException;
     void delete(Object object);
     List<Object> findAll(Class theClass) throws NoSuchMethodException;
+    public List<Object> findAllFor(Class<?> theClass, String fieldName, Object fieldValue) throws NoSuchMethodException;
     List<Object> findAll(Object object, List<String> args);
 }

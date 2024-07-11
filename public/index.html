@@ -33,10 +33,12 @@
   <div class="main-container">
     <main>
       <br>
+
       <section id="profile-info" class="page">
         <h2>Informations du Profil</h2>
-        <p>Nom : John Doe</p>
-        <p>Email : john.doe@example.com</p>l</section>
+        <p>Nom : <span id="profile-username">John Doe</span></p>
+        <p>Email : <span id="profile-email">john.doe@example.com</span></p>
+      </section>
       
       <section id="home" class="page">
         <div class="bodysection-container">
@@ -75,16 +77,16 @@
                   <button type="submit">Envoyer</button>
               </div>
           </form>
-      </div>
-      <h1>Questions déja posées : </h2>
+        </div>
+        <h1>Questions déja posées : </h1>
         <div class="question-card">
-          <img src="assets/ressource/Profile.jpg" alt="Photo de profil" class="profile-pic">
-          <div class="question-content">
-              <div class="username">Nom d'utilisateur</div>
-              <h3>Titre de la question</h3>
-              <p>Description de la question... (troncature si nécessaire)</p>
+            <img src="assets/ressource/Profile.jpg" alt="Photo de profil" class="profile-pic">
+            <div class="question-content">
+                <div class="username">Nom d'utilisateur</div>
+                  <h3>Titre de la question</h3>
+                  <p>Description de la question... (troncature si nécessaire)</p>
+             </div>
           </div>
-      </div>
       </section>
     </main>
   </div>

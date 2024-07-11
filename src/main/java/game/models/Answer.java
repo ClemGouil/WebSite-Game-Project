@@ -1,32 +1,35 @@
 package game.models;
 
-public class Question {
-    private String title;
+public class Answer {
+    private int id_question;
     private int id_user;
     private String date;
     private String content;
 
-    public Question() {}
-    public Question(int id_user, String date, String title, String content) {
+    public Answer() {}
+
+    // Constructeur
+    public Answer(int id_question, int id_user, String date, String content) {
+        this.id_question = id_question;
         this.id_user = id_user;
         this.date = date;
-        this.title = title;
         this.content = content;
     }
 
-    public String getTitle() {
-        return title;
+    // Getters et Setters
+    public int getId_question() {
+        return id_question;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setId_question(int id_question) {
+        this.id_question = id_question;
     }
 
     public int getId_user() {
         return id_user;
     }
 
-    public void setId_user(Integer id_user) {
+    public void setId_user(int id_user) {
         this.id_user = id_user;
     }
 
@@ -46,10 +49,11 @@ public class Question {
         this.content = content;
     }
 
+    // Méthode toString
     @Override
     public String toString() {
-        return "Question{" +
-                "title='" + title + '\'' +
+        return "Answer{" +
+                "id_question=" + id_question +
                 ", id_user=" + id_user +
                 ", date='" + date + '\'' +
                 ", content='" + content + '\'' +

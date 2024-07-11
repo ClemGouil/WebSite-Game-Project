@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import game.models.Message;
+import game.models.Question;
 import game.models.User;
 import game.util.PasswordSecurity;
 
@@ -25,7 +26,7 @@ public class GameManagerImpl implements GameManager{
     //////////////////////////////////////////////////// USERS ////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public int size() {
+    public int sizeUsers() {
         int ret = this.getUsers().size();
         logger.info("size " + ret);
 
@@ -171,8 +172,6 @@ public class GameManagerImpl implements GameManager{
 
             isUpdate = session.update(u);
             if (isUpdate) {
-                info = new Message(i, date + " : your profile is updated !");
-                session.save(info);
                 user = u;
                 user.setPassword(PasswordSecurity.decrypt(user.getPassword()));
                 logger.info("User updated");
@@ -213,4 +212,201 @@ public class GameManagerImpl implements GameManager{
         }
         return null;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////// QUESTIONS ////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public Question addQuestion(Question q) {
+
+        // LocalDate date = LocalDate.now();
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("Posté le dd/MM/yyyy 'à' HH'h'mm");
+        // String formattedDate = date.format(formatter);
+        logger.info("new question : " + q + " should be add");
+        Session session = null;
+        Question question = null;
+
+        try {
+            logger.info("ICI");
+            session = FactorySession.openSession();
+            question = q;
+            //question.setDate(formattedDate);
+            session.save(question);           
+            logger.info("new question " + q + " added");
+        } catch (Exception e) {
+            logger.error("Error adding question: ", e);
+        } finally {
+            session.close();
+        }
+        return question;
+    }
+
+    @Override
+    public List<Question> getQuestions() {
+        Session session = null;
+        List<Question> questions = null;
+
+        try {
+            session = FactorySession.openSession();
+            questions = session.findAll(Question.class);
+            logger.info("questions are : " + questions);
+        } catch (Exception e) {
+        } finally {
+            session.close();
+        }
+        return questions;
+    }
+
+    @Override
+    public Question updateQuestion(Question q) {
+
+        logger.info(" question : " + q + " should be update");
+        Session session = null;
+        // LocalDate date = LocalDate.now();
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("modifié le dd/MM/yyyy 'à' HH'h'mm");
+        // String formattedDate = date.format(formatter);
+        Question question = null;
+        boolean isUpdate = false;
+
+        try {
+            session = FactorySession.openSession();
+            isUpdate = session.update(q);
+            if (isUpdate) {
+                //q.setDate(formattedDate);
+                question = q;
+                logger.info("Question updated");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return question;
+    }
+
+    @Override
+    public Question deleteQuestion(Question q) {
+
+        Session session = null;
+        Question question = null;
+        int id = 0;
+        try {
+            session = FactorySession.openSession();
+            question = q;
+            session.delete(question);
+            logger.info("question : "+ q +" deleted");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return question;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////// ANSWERS ////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // @Override
+    // public Answer addAnswer(Answer a) {
+
+    //     LocalDate date = LocalDate.now();
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("Posté le dd/MM/yyyy 'à' HH'h'mm");
+    //     String formattedDate = date.format(formatter);
+    //     logger.info("new Answer : " + a + " should be add");
+    //     Session session = null;
+    //     Answer Answer = null;
+    
+    //     try {
+    //         session = FactorySession.openSession();
+    //         Answer = a;
+    //         Answer.setDate(formattedDate);
+    //         session.save(Answer);           
+    //         logger.info("new Answer " + a + " added");
+    //     } catch (Exception e) {
+    //         logger.error("Error adding Answer: ", e);
+    //     } finally {
+    //         session.close();
+    //     }
+    //     return Answer;
+    // }
+    
+    // @Override
+    // public List<Answer> getAnswers() {
+    //     Session session = null;
+    //     List<Answer> Answers = null;
+    
+    //     try {
+    //         session = FactorySession.openSession();
+    //         Answers = session.findAll(Answer.class);
+    //         logger.info("Answers are : " + Answers);
+    //     } catch (Exception e) {
+    //     } finally {
+    //         session.close();
+    //     }
+    //     return Answers;
+    // }
+
+    // @Override
+    // public List<Answer> getAnswersOfAQuestion(int id_question) {
+    //     Session session = null;
+    //     List<Answer> Answers = null;
+    
+    //     try {
+    //         session = FactorySession.openSession();
+
+    //         Answers = session.findAllFor(Answer.class, "id_Question", id_question);
+    //         logger.info("Answers are : " + Answers);
+    //     } catch (Exception e) {
+    //     } finally {
+    //         session.close();
+    //     }
+    //     return Answers;
+    // }
+    
+    // @Override
+    // public Answer updateAnswer(Answer a) {
+    
+    //     Session session = null;
+    //     LocalDate date = LocalDate.now();
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("modifié le dd/MM/yyyy 'à' HH'h'mm");
+    //     String formattedDate = date.format(formatter);
+    //     Answer Answer = null;
+    //     boolean isUpdate = false;
+    
+    //     try {
+    //         session = FactorySession.openSession();
+    //         isUpdate = session.update(a);
+    //         if (isUpdate) {
+    //             a.setDate(formattedDate);
+    //             Answer = a;
+    //             logger.info("Answer updated");
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     } finally {
+    //         session.close();
+    //     }
+    //     return Answer;
+    // }
+    
+    // @Override
+    // public Answer deleteAnswer(Answer a) {
+    
+    //     Session session = null;
+    //     Answer Answer = null;
+    //     int id = 0;
+    //     try {
+    //         session = FactorySession.openSession();
+    //         Answer = a;
+    //         session.delete(Answer);
+    //         logger.info("Answer : "+ a +" deleted");
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     } finally {
+    //         session.close();
+    //     }
+    //     return Answer;
+    // }
 }
