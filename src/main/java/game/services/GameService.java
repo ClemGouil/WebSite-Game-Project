@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 
 import game.GameManager;
 import game.GameManagerImpl;
+import game.models.Answer;
 import game.models.Question;
 import game.models.User;
 import io.swagger.annotations.Api;
@@ -72,20 +73,20 @@ public class GameService {
         return Response.status(201).entity(entity).build();
     }
 
-    // @GET
-    // @ApiOperation(value = "get all Answers", notes = "asdasd")
-    // @ApiResponses(value = {
-    //         @ApiResponse(code = 201, message = "Successful", response = Answer.class, responseContainer="List"),
-    // })
-    // @Path("/answers")
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response getAnswers() {
+    @GET
+    @ApiOperation(value = "get all Answers", notes = "asdasd")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Answer.class, responseContainer="List"),
+    })
+    @Path("/answers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAnswers() {
 
-    //     List<Answer> answers = this.gm.getAnswers();
+        List<Answer> answers = this.gm.getAnswers();
 
-    //     GenericEntity<List<Answer>> entity = new GenericEntity<List<Answer>>(answers) {};
-    //     return Response.status(201).entity(entity).build();
-    // }
+        GenericEntity<List<Answer>> entity = new GenericEntity<List<Answer>>(answers) {};
+        return Response.status(201).entity(entity).build();
+    }
 
     @GET
     @ApiOperation(value = "get an User", notes = "asdasd")
@@ -165,36 +166,30 @@ public class GameService {
         else {return Response.status(201).entity(question).build();}
     }
 
-    // @POST
-    // @ApiOperation(value = "create a new Answer", notes = "asdasd")
-    // @ApiResponses(value = {
-    //         @ApiResponse(code = 201, message = "Successful", response = Answer.class),
-    //         @ApiResponse(code = 400, message = "Answer already exists or invalid input")
-    // })
-    // @Path("/answers/create")
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response newAnswer(Answer a) {
-    //     try {
-    //         // Validate input
-    //         if (a == null || a.getid_user() == 0 || a.getid_question() == 0 || a.getContent() == null || a.getDate() == null) { // Replace getSomeRequiredField with actual required field check
-    //             return Response.status(400).entity("Invalid input").build();
-    //         }
+    @POST
+    @ApiOperation(value = "create a new Answer", notes = "asdasd")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Answer.class),
+            @ApiResponse(code = 400, message = "Answer already exists or invalid input")
+    })
+    @Path("/answers/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response newAnswer(Answer a) {
+        try {
+            // Validate input
 
-    //         Answer answer = this.gm.addAnswer(a);
+            Answer answer = this.gm.addAnswer(a);
 
-    //         if (answer == null) {
-    //             return Response.status(400).entity("Answer already exists").build();
-    //         } else {
-    //             return Response.status(201).entity(answer).build();
-    //         }
-    //     } catch (Exception e) {
-    //         // Log the exception (this could be to a file, console, etc.)
-    //         e.printStackTrace();
-    //         // Return a generic error response
-    //         return Response.status(500).entity("Internal Server Error").build();
-    //     }
-    // }
+        if (answer == null) {return Response.status(400).build();}
+        else {return Response.status(201).entity(answer).build();}
+        } catch (Exception e) {
+            // Log the exception (this could be to a file, console, etc.)
+            e.printStackTrace();
+            // Return a generic error response
+            return Response.status(500).entity("Internal Server Error").build();
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////// PUT /////////////////////////////////////////////////////////
@@ -235,25 +230,25 @@ public class GameService {
         else {return Response.status(201).entity(q).build();}
     }
 
-    // @PUT
-    // @ApiOperation(value = "update a Answer", notes = "asdasd")
-    // @ApiResponses(value = {
-    //         @ApiResponse(code = 201, message = "Successful", response = Answer.class),
-    //         @ApiResponse(code = 404, message = "Answer not found")
-    // })
-    // @Path("/answers")
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response updateAnswer(Answer a) {
+    @PUT
+    @ApiOperation(value = "update an Answer", notes = "asdasd")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Answer.class),
+            @ApiResponse(code = 404, message = "Answer not found")
+    })
+    @Path("/answers")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateAnswer(Answer a) {
 
-    //     Answer answer = this.gm.updateAnswer(a);
+        Answer answer = this.gm.updateAnswer(a);
 
-    //     if (answer == null) {
-    //         return Response.status(404).build();
-    //     } else {
-    //         return Response.status(201).entity(answer).build();
-    //     }
-    // }
+        if (answer == null) {
+            return Response.status(404).build();
+        } else {
+            return Response.status(201).entity(a).build();
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////// DELETE /////////////////////////////////////////////////////////
@@ -277,23 +272,23 @@ public class GameService {
         else {return Response.status(201).entity(t).build();}
     }
 
-    @DELETE
-    @ApiOperation(value = "delete a Question", notes = "asdasd")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response= User.class),
-            @ApiResponse(code = 404, message = "User not found")
-    })
-    @Path("/questions/delete")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteQuestion(Question q) {
+    // @DELETE
+    // @ApiOperation(value = "delete a Question", notes = "asdasd")
+    // @ApiResponses(value = {
+    //         @ApiResponse(code = 201, message = "Successful", response= User.class),
+    //         @ApiResponse(code = 404, message = "User not found")
+    // })
+    // @Path("/questions/delete")
+    // @Consumes(MediaType.APPLICATION_JSON)
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response deleteQuestion(Question q) {
 
-        logger.info("ICI dELETE Question");
-        Question question = this.gm.deleteQuestion(q);
+    //     logger.info("ICI dELETE Question");
+    //     Question question = this.gm.deleteQuestion(q);
 
-        if (question == null) {return Response.status(404).build();}
-        else {return Response.status(201).entity(question).build();}
-    }
+    //     if (question == null) {return Response.status(404).build();}
+    //     else {return Response.status(201).entity(question).build();}
+    // }
 
     // @DELETE
     // @ApiOperation(value = "delete a Answer", notes = "asdasd")

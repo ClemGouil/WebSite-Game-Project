@@ -2,6 +2,7 @@ package game;
 
 import java.util.List;
 
+import game.models.Answer;
 import game.models.Question;
 import game.models.User;
 
@@ -25,13 +26,13 @@ public interface GameManager {
     public Question addQuestion(Question q);
     public List<Question> getQuestions();
     public Question updateQuestion(Question q);
-    public Question deleteQuestion(Question q);
+    //public Question deleteQuestion(Question q);
 
     // Answer Part
 
-    // public Answer addAnswer(Answer q);
+    public Answer addAnswer(Answer q);
     // public List<Answer> getAnswersOfAQuestion(int id_question);
-    // public List<Answer> getAnswers();
-    // public Answer updateAnswer(Answer q);
-    // public Answer deleteAnswer(Answer q);
+    public List<Answer> getAnswers();
+    public Answer updateAnswer(Answer q);
+    //public Answer deleteAnswer(Answer q);
 }

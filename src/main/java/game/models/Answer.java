@@ -21,7 +21,7 @@ public class Answer {
         return id_question;
     }
 
-    public void setId_question(int id_question) {
+    public void setId_question(Integer id_question) {
         this.id_question = id_question;
     }
 
@@ -29,7 +29,7 @@ public class Answer {
         return id_user;
     }
 
-    public void setId_user(int id_user) {
+    public void setId_user(Integer id_user) {
         this.id_user = id_user;
     }
 

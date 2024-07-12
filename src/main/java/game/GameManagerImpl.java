@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import game.models.Answer;
 import game.models.Message;
 import game.models.Question;
 import game.models.User;
@@ -278,68 +279,68 @@ public class GameManagerImpl implements GameManager{
         return question;
     }
 
-    @Override
-    public Question deleteQuestion(Question q) {
+    // @Override
+    // public Question deleteQuestion(Question q) {
 
-        Session session = null;
-        Question question = null;
-        int id = 0;
-        try {
-            session = FactorySession.openSession();
-            question = q;
-            session.delete(question);
-            logger.info("question : "+ q +" deleted");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return question;
-    }
+    //     Session session = null;
+    //     Question question = null;
+    //     int id = 0;
+    //     try {
+    //         session = FactorySession.openSession();
+    //         question = q;
+    //         session.delete(question);
+    //         logger.info("question : "+ q +" deleted");
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     } finally {
+    //         session.close();
+    //     }
+    //     return question;
+    // }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////// ANSWERS ////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // @Override
-    // public Answer addAnswer(Answer a) {
+    @Override
+    public Answer addAnswer(Answer a) {
 
-    //     LocalDate date = LocalDate.now();
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("Posté le dd/MM/yyyy 'à' HH'h'mm");
-    //     String formattedDate = date.format(formatter);
-    //     logger.info("new Answer : " + a + " should be add");
-    //     Session session = null;
-    //     Answer Answer = null;
+        // LocalDate date = LocalDate.now();
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("Posté le dd/MM/yyyy 'à' HH'h'mm");
+        // String formattedDate = date.format(formatter);
+        logger.info("new Answer : " + a + " should be add");
+        Session session = null;
+        Answer Answer = null;
     
-    //     try {
-    //         session = FactorySession.openSession();
-    //         Answer = a;
-    //         Answer.setDate(formattedDate);
-    //         session.save(Answer);           
-    //         logger.info("new Answer " + a + " added");
-    //     } catch (Exception e) {
-    //         logger.error("Error adding Answer: ", e);
-    //     } finally {
-    //         session.close();
-    //     }
-    //     return Answer;
-    // }
+        try {
+            session = FactorySession.openSession();
+            Answer = a;
+            //Answer.setDate(formattedDate);
+            session.save(Answer);           
+            logger.info("new Answer " + a + " added");
+        } catch (Exception e) {
+            logger.error("Error adding Answer: ", e);
+        } finally {
+            session.close();
+        }
+        return Answer;
+    }
     
-    // @Override
-    // public List<Answer> getAnswers() {
-    //     Session session = null;
-    //     List<Answer> Answers = null;
+    @Override
+    public List<Answer> getAnswers() {
+        Session session = null;
+        List<Answer> Answers = null;
     
-    //     try {
-    //         session = FactorySession.openSession();
-    //         Answers = session.findAll(Answer.class);
-    //         logger.info("Answers are : " + Answers);
-    //     } catch (Exception e) {
-    //     } finally {
-    //         session.close();
-    //     }
-    //     return Answers;
-    // }
+        try {
+            session = FactorySession.openSession();
+            Answers = session.findAll(Answer.class);
+            logger.info("Answers are : " + Answers);
+        } catch (Exception e) {
+        } finally {
+            session.close();
+        }
+        return Answers;
+    }
 
     // @Override
     // public List<Answer> getAnswersOfAQuestion(int id_question) {
@@ -358,31 +359,32 @@ public class GameManagerImpl implements GameManager{
     //     return Answers;
     // }
     
-    // @Override
-    // public Answer updateAnswer(Answer a) {
-    
-    //     Session session = null;
-    //     LocalDate date = LocalDate.now();
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("modifié le dd/MM/yyyy 'à' HH'h'mm");
-    //     String formattedDate = date.format(formatter);
-    //     Answer Answer = null;
-    //     boolean isUpdate = false;
-    
-    //     try {
-    //         session = FactorySession.openSession();
-    //         isUpdate = session.update(a);
-    //         if (isUpdate) {
-    //             a.setDate(formattedDate);
-    //             Answer = a;
-    //             logger.info("Answer updated");
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     } finally {
-    //         session.close();
-    //     }
-    //     return Answer;
-    // }
+    @Override
+    public Answer updateAnswer(Answer a) {
+
+        logger.info(" Answer : " + a + " should be update");
+        Session session = null;
+        // LocalDate date = LocalDate.now();
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("modifié le dd/MM/yyyy 'à' HH'h'mm");
+        // String formattedDate = date.format(formatter);
+        Answer answer = null;
+        boolean isUpdate = false;
+
+        try {
+            session = FactorySession.openSession();
+            isUpdate = session.update(a);
+            if (isUpdate) {
+                //q.setDate(formattedDate);
+                answer = a;
+                logger.info("Answer updated");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return answer;
+    }
     
     // @Override
     // public Answer deleteAnswer(Answer a) {
