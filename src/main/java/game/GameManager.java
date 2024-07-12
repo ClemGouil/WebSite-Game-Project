@@ -19,7 +19,6 @@ public interface GameManager {
     public User deleteUser(String mail, String password);
     
     public User loginUser(User user);
-    public User authentification(String mail, String password);
 
     // Question Part 
 

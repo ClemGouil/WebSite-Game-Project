@@ -97,8 +97,7 @@ a:hover {
 
 /* Profile */
 .profile {
-  align-items: center;
-  margin-left: 20px;
+  position: relative; /* Ajouté pour utiliser la position relative */
 }
 
 .profile-image {
@@ -108,7 +107,29 @@ a:hover {
   object-fit: cover;
 }
 
-/* Profile */
+.profile-menu {
+  display: none;
+  position: absolute;
+  top: 50px; /* Ajustez selon votre mise en page */
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.profile-menu p {
+  margin: 5px 0;
+}
+
+.profile-menu button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+}
+
+/* Notif */
 .notif {
   align-items: center;
   margin-left: 20px;
@@ -119,16 +140,6 @@ a:hover {
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
-}
-
-.profile-info {
-  position: absolute;
-  top: 60px;
-  right: 20px;
-  background-color: white;
-  border: 1px solid #ccc;
-  padding: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Card */

@@ -19,27 +19,27 @@
           <li><a href="#" onclick="showPage('forum')">Forum</a></li>
         </ul>
       </nav>
-      <div class="login-button"  id="login-button">
+      <div class="login-button" id="login-button">
         <a href="login.html">Se Connecter</a>
       </div>
-      <div class="profile"  id="profile" style="display: none;">
-        <img src="assets/ressource/profile.jpg" alt="Profil" class="profile-image" href="login.html">
+      <div class="profile" id="profile" style="display: none;">
+        <img src="assets/ressource/profile.jpg" alt="Profil" class="profile-image" onclick="toggleProfileMenu()">
+        <div id="profile-menu" class="profile-menu">
+          <p>Nom : <span id="profile-username-menu">Nom non défini</span></p>
+          <p>Email : <span id="profile-email-menu">Email non défini</span></p>
+          <button onclick="editProfile()">Modifier le profil</button>
+          <button onclick="logout()">Se déconnecter</button>
+        </div>
       </div>
-      <div class="notif"  id="notif" style="display: none;">
+      <div class="notif" id="notif" style="display: none;">
         <img src="assets/ressource/notif.png" alt="Notif" class="notif-image">
       </div>
     </div>
   </header>
+  
   <div class="main-container">
     <main>
       <br>
-
-      <section id="profile-info" class="page">
-        <h2>Informations du Profil</h2>
-        <p>Nom : <span id="profile-username">John Doe</span></p>
-        <p>Email : <span id="profile-email">john.doe@example.com</span></p>
-      </section>
-      
       <section id="home" class="page">
         <div class="bodysection-container">
           <h1>Bienvenue sur la page d'accueil</h1>
@@ -55,14 +55,14 @@
                 <h2>Hermione Granger</h2>
                 <p>Description du personnage.</p>
             </div>
+          </div>
         </div>
-      </div>
       </section>
 
       <section id="play" class="page">Page de jeu</section>
 
       <section id="forum" class="page">
-        <h1>Soumettre une question : </h2>
+        <h1>Soumettre une question : </h1>
         <div class="form-container">
           <form action="/submit-question" method="post">
               <div class="form-group">
@@ -78,7 +78,7 @@
               </div>
           </form>
         </div>
-        <h1>Questions déja posées : </h1>
+        <h1>Questions déja posées :</h1>
         <div class="question-card">
             <img src="assets/ressource/Profile.jpg" alt="Photo de profil" class="profile-pic">
             <div class="question-content">
@@ -93,4 +93,3 @@
   <script src="assets/script/index-scripts.js"></script>
 </body>
 </html>
-

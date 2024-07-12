@@ -91,10 +91,8 @@ public class GameManagerImpl implements GameManager{
     }
 
     @Override
-    public User authentification(String mail, String password) {
-
+    public User loginUser(User user) {
         Session session = null;
-        User user = new User(mail, password, "Zidane");
         User u = null;
         int id = 0;
 
@@ -106,7 +104,7 @@ public class GameManagerImpl implements GameManager{
                 logger.info("user not found");
             } else {
                 u = this.getUser(id);
-                if (!(PasswordSecurity.decrypt(u.getPassword()).equals(password))) {
+                if (!(PasswordSecurity.decrypt(u.getPassword()).equals(user.getPassword()))) {
                     logger.warn("Password wrong");
                     return null;
                 } else {
@@ -120,11 +118,6 @@ public class GameManagerImpl implements GameManager{
         }
 
         return null;
-    }
-
-    @Override
-    public User loginUser(User user) {
-        return this.authentification(user.getMail(), user.getPassword());
     }
 
     @Override
@@ -194,7 +187,7 @@ public class GameManagerImpl implements GameManager{
 
         try {
             session = FactorySession.openSession();
-            user = this.authentification(mail, password);
+            //user = this.authentification(mail, password);
             id = session.getID(user);
 
             if (id == 0) {
