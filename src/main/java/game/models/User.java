@@ -8,6 +8,7 @@ public class User {
     String mail;
     String password;
     String username;
+    String urlPictureProfil;
 
     public User() {}
     public User(String mail, String password, String username) {
@@ -15,6 +16,7 @@ public class User {
         this.setMail(mail);
         this.setUsername(username);
         this.setPassword(password);
+        this.setUrlPictureProfil("images/profiles/Profile.jpg");
     }
 
     public String getMail() {
@@ -38,9 +40,17 @@ public class User {
         this.password=password;
     }
 
+    public String getUrlPictureProfil() {
+        return this.urlPictureProfil;
+    }
+
+    public void setUrlPictureProfil(String urlPictureProfil) {
+        this.urlPictureProfil = urlPictureProfil;
+    }
+
     @Override
     public String toString() {
-        return "User [mail=" + mail + ", username=" + username +", password=" + password + "]";
+        return "User [mail=" + mail + ", username=" + username + ", password=" + password + ", urlPictureProfil=" + urlPictureProfil + "]";
     }
     
     public boolean isEquals(User u) throws NoSuchMethodException {
@@ -55,5 +65,4 @@ public class User {
         }
         return true;
     }
-
 }

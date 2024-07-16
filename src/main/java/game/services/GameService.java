@@ -103,6 +103,23 @@ public class GameService {
         else  {return Response.status(201).entity(u).build();}
     }
 
+    @GET
+    @ApiOperation(value = "Get a User ID", notes = "Returns the ID of the user with the given email")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful", response = Integer.class),
+            @ApiResponse(code = 404, message = "User not found")
+    })
+    @Path("/users/id/{mail}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserId(@PathParam("mail") String mail) {
+        int id = this.gm.getIdOfUser(mail);
+
+        if (id == -1) {
+            return Response.status(404).entity("User not found").build();
+        } else {
+            return Response.status(200).entity(id).build();
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////// POST /////////////////////////////////////////////////////////

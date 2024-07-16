@@ -61,6 +61,23 @@
 
       <section id="play" class="page">Page de jeu</section>
 
+      <section id="update-profile" class="page">
+        <h2>Update Profile</h2>
+        <form id="submitUpdateProfileForm">
+            <div class="form-group">
+                <label for="username">New Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="profilePicture">New Profile Picture (PNG or JPG):</label>
+                <input type="file" id="profilePicture" name="profilePicture" accept=".png, .jpg, .jpeg" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Update Profile</button>
+            </div>
+        </form>
+    </section>
+    
       <section id="forum" class="page">
         <h1>Soumettre une question : </h1>
         <div class="form-container">

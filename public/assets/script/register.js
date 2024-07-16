@@ -10,7 +10,8 @@ document.getElementById('registrationForm').addEventListener('submit', function(
     var userData = {
       username: username,
       mail: email,
-      password: confirmPassword
+      password: confirmPassword,
+      urlPictureProfil : "images/profiles/Profile.jpg"
     };
 
     // Options de la requête fetch

@@ -92,6 +92,25 @@ public class GameManagerImpl implements GameManager{
     }
 
     @Override
+    public int getIdOfUser (String  mail){
+        Session session = null;
+        User u = null;
+        int id = 0;
+
+        try {
+            User user = new User();
+            user.setMail(mail);
+            session = FactorySession.openSession();
+            id = session.getID(user);
+            return id;
+        } catch (Exception e) {
+        } finally {
+            session.close();
+        }
+        return 0;
+    }
+
+    @Override
     public User loginUser(User user) {
         Session session = null;
         User u = null;

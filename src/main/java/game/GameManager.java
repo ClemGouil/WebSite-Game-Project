@@ -15,6 +15,7 @@ public interface GameManager {
     public User addUser(String  mail, String username, String password);
     public User addUser(User u);
     public User getUser (int id);
+    public int getIdOfUser (String  mail);
     public List<User> getUsers();
     public User updateUser(User u);
     public User deleteUser(String mail, String password);
