@@ -219,6 +219,71 @@ document.getElementById('submitQuestionForm').addEventListener('submit', functio
       });
 });
 
-document.getElementById('submitUpdateProfileForm').addEventListener('submit', function(event) {
+document.getElementById('submitUpdateProfileForm').addEventListener('submit', async function(event) {
   event.preventDefault(); // Empêche le comportement par défaut du formulaire
+
+  // Récupère les données du formulaire
+  const username = document.getElementById('username').value;
+  const profilePicture = document.getElementById('profilePicture').files[0];
+
+  try {
+      // Télécharge l'image et obtient l'URL depuis Cloudinary
+      const imageUrl = await uploadImageToCloudinary(profilePicture);
+      const email = localStorage.getItem('email'); // Récupère l'email depuis le localStorage
+
+      // Affichage des valeurs dans la console
+      console.log('Username:', username);
+      console.log('Email:', email);
+      console.log('Profile Picture URL:', imageUrl);
+
+      // Prépare les données à envoyer à l'API
+      const data = {
+          mail: email,
+          username: username,
+          password: "1234", // Assurez-vous que cela est sécurisé côté serveur
+          urlPictureProfil: imageUrl // Utilise l'URL sécurisée de l'image téléchargée
+      };
+
+      // URL de l'API
+      const apiEndpoint = 'http://localhost/GameApp/users/update';
+
+      // Options de la requête fetch
+      const requestOptions = {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+      };
+
+      // Envoie les données à l'API pour mettre à jour le profil
+      const response = await fetch(apiEndpoint, requestOptions);
+
+      if (response.ok) {
+          console.log('Profile updated successfully');
+      } else {
+          console.error('An error occurred while updating the profile');
+      }
+  } catch (error) {
+      console.error('An error occurred:', error);
+  }
 });
+
+// Fonction pour télécharger l'image vers Cloudinary et obtenir l'URL sécurisée
+async function uploadImageToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', 'gamedbpreset'); // Remplacez par votre upload preset
+
+  const response = await fetch('https://api.cloudinary.com/v1_1/deqqta8v0/image/upload', {
+      method: 'POST', // Utilisation de la méthode POST pour l'upload d'image
+      body: formData
+  });
+
+  if (response.ok) {
+      const result = await response.json();
+      return result.secure_url; // Retourne l'URL sécurisée de l'image
+  } else {
+      throw new Error('Failed to upload image');
+  }
+}
