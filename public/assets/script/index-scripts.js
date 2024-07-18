@@ -1,13 +1,92 @@
-// index-scripts.js
 document.addEventListener('DOMContentLoaded', function() {
+  updateProfileInfo();
   showPage('home'); // Affiche la page d'accueil par défaut
   checkLoginStatus(); // Vérifie l'état de connexion de l'utilisateur
-  fetchQuestions()
+  fetchQuestions();
 
   const notifImage = document.getElementById('notif');
 
   notifImage.addEventListener('click', function() {
+    // Add the logic for the notification click event
+  });
 
+  const cloudName = "hzxyensd5"; // replace with your own cloud name
+  const uploadPreset = "aoh4fpwm"; // replace with your own upload preset
+
+  const myWidget = cloudinary.createUploadWidget(
+    {
+      cloudName: cloudName,
+      uploadPreset: uploadPreset,
+      // Additional options can be added here
+    },
+    (error, result) => {
+      if (!error && result && result.event === "success") {
+        console.log("Done! Here is the image info: ", result.info);
+        document.getElementById("uploadedimage").setAttribute("src", result.info.secure_url);
+        document.getElementById("profilePictureUrl").value = result.info.secure_url;
+        document.getElementById("uploadedimage").style.display = "block";
+      } else if (error) {
+        console.error("Upload Widget error: ", error);
+      }
+    }
+  );
+
+  document.getElementById("upload_widget").addEventListener("click", function() {
+    myWidget.open();
+  }, false);
+
+  // Handle form submission
+  document.getElementById('submitUpdateProfileForm').addEventListener('submit', async function(e) {
+    e.preventDefault(); // Prevent default form submission
+
+    const username = document.getElementById('username').value;
+    const profilePictureUrl = document.getElementById('profilePictureUrl').value;
+    const email = localStorage.getItem('email');
+
+    if (!profilePictureUrl) {
+      alert('Please upload a profile picture.');
+      return;
+    }
+
+    console.log('Username:', username);
+    console.log('Email:', email);
+    console.log('Profile Picture URL:', profilePictureUrl);
+
+    const data = {
+      mail: email,
+      username: username,
+      password: "1234", // Assurez-vous que cela est sécurisé côté serveur
+      urlPictureProfil: profilePictureUrl // Utilise l'URL sécurisée de l'image téléchargée
+    };
+
+    const apiEndpoint = 'http://localhost/GameApp/users/update';
+
+    try {
+      const response = await fetch(apiEndpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        console.log('Profile updated successfully');
+        // Update local storage
+        localStorage.setItem('username', username);
+        localStorage.setItem('urlPictureProfil', profilePictureUrl);
+        alert('Profile updated successfully!');
+        // Optionally reload the page or update the UI
+        updateProfileInfo();
+        window.location.reload();
+      } else {
+        console.error('An error occurred while updating the profile');
+        alert('An error occurred while updating the profile');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      alert('An error occurred while updating the profile');
+    }
   });
 });
 
@@ -20,14 +99,13 @@ function showPage(pageId) {
 }
 
 function checkLoginStatus() {
-
-  var isLoggedIn = localStorage.getItem('isLogged') === 'true';
+  const isLoggedIn = localStorage.getItem('isLogged') === 'true';
   console.log('isLoggedIn:', isLoggedIn);
 
-  var loginButton = document.getElementById('login-button');
-  var profile = document.getElementById('profile');
-  var notif = document.getElementById('notif');
-  var profileMenu = document.getElementById('profile-menu');
+  const loginButton = document.getElementById('login-button');
+  const profile = document.getElementById('profile');
+  const notif = document.getElementById('notif');
+  const profileMenu = document.getElementById('profile-menu');
 
   if (isLoggedIn) {
     loginButton.style.display = 'none';
@@ -42,248 +120,165 @@ function checkLoginStatus() {
 }
 
 function updateProfileInfo() {
-  
-  // Récupérer les valeurs du Local Storage
-  var username = localStorage.getItem('username');
-  var email = localStorage.getItem('email');
+  const username = localStorage.getItem('username');
+  const email = localStorage.getItem('email');
+  const urlPictureProfil = localStorage.getItem('urlPictureProfil');
 
-  console.log('Updated Info',username, email);
-  // Mettre à jour le menu du profil
+  console.log('Updated Info', username, email);
   document.getElementById('profile-username-menu').textContent = username || 'Nom non défini';
   document.getElementById('profile-email-menu').textContent = email || 'Email non défini';
+  document.getElementById('profile-image').src = urlPictureProfil || 'assets/ressource/profile.jpg';
 }
 
 function toggleProfileMenu() {
-  var profileMenu = document.getElementById('profile-menu');
+  const profileMenu = document.getElementById('profile-menu');
   if (profileMenu.style.display === 'block') {
     profileMenu.style.display = 'none';
   } else {
-    updateProfileInfo()
+    updateProfileInfo();
     profileMenu.style.display = 'block';
   }
 }
 
 function editProfile() {
-  showPage("update-profile")
-  toggleProfileMenu()
+  showPage("update-profile");
+  toggleProfileMenu();
 }
 
 function logout() {
-  // Logic to logout the user
   localStorage.removeItem('username');
   localStorage.removeItem('email');
-  localStorage.setItem('isLogged',false);
+  localStorage.setItem('isLogged', false);
   window.location.href = 'index.html';
-  toggleProfileMenu()
+  toggleProfileMenu();
 }
 
 async function fetchQuestions() {
   try {
-      var apiEndpoint = 'http://localhost/GameApp/questions'; 
-      const response = await fetch(apiEndpoint);
-      const questions = await response.json();
-      displayQuestions(questions);
+    const apiEndpoint = 'http://localhost/GameApp/questions'; 
+    const response = await fetch(apiEndpoint);
+    const questions = await response.json();
+    displayQuestions(questions);
   } catch (error) {
-      console.error('Erreur lors de la récupération des questions:', error);
+    console.error('Erreur lors de la récupération des questions:', error);
   }
 }
 
 async function getUserById(id) {
   try {
-      var apiEndpoint = 'http://localhost/GameApp/users/' + id; 
-      const response = await fetch(apiEndpoint);
-      if (response.ok) {
-          return await response.json();
-      } else {
-          throw new Error('User not found');
-      }
+    const apiEndpoint = 'http://localhost/GameApp/users/' + id; 
+    const response = await fetch(apiEndpoint);
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error('User not found');
+    }
   } catch (error) {
-      console.error('Erreur lors de la récupération user', error);
-      throw error; // Propager l'erreur pour qu'elle soit capturée par l'appelant
+    console.error('Erreur lors de la récupération user', error);
+    throw error;
   }
 }
 
 async function displayQuestions(questions) {
   const container = document.getElementById('questions-container');
   for (const question of questions) {
-      try {
-          const user = await getUserById(question.id_user);
-          const username = user.username;
-          createQuestionCard(container, question, username);
-      } catch (error) {
-          console.error(`Error fetching user with ID ${question.id_user}:`, error);
-          const username = 'Utilisateur inconnu'; // Valeur par défaut
-          createQuestionCard(container, question, username);
-      }
+    try {
+      const user = await getUserById(question.id_user);
+      const username = user.username;
+      const urlPictureProfil = user.urlPictureProfil;
+      createQuestionCard(container, question, username, urlPictureProfil);
+    } catch (error) {
+      console.error(`Error fetching user with ID ${question.id_user}:`, error);
+      const username = 'Utilisateur inconnu';
+      createQuestionCard(container, question, username, "assets/ressource/Profile.jpg");
+    }
   }
 }
 
-function createQuestionCard(container, question, username) {
+function createQuestionCard(container, question, username, urlPictureProfil) {
   const card = document.createElement('div');
   card.className = 'question-card';
 
   card.innerHTML = `
-      <img src="assets/ressource/Profile.jpg" alt="Photo de profil" class="profile-pic">
-      <div class="question-content">
-          <div class="username">${username}</div>
-          <h3>${question.title}</h3>
-          <p>${truncateText(question.content, 100)}</p>
-      </div>
+    <img src=${urlPictureProfil} alt="Photo de profil" class="profile-pic">
+    <div class="question-content">
+      <div class="username">${username}</div>
+      <h3>${question.title}</h3>
+      <p>${truncateText(question.content, 100)}</p>
+    </div>
   `;
   container.appendChild(card);
 }
 
 function truncateText(text, maxLength) {
   if (text.length > maxLength) {
-      return text.substring(0, maxLength) + '...';
+    return text.substring(0, maxLength) + '...';
   }
   return text;
 }
 
 document.getElementById('submitQuestionForm').addEventListener('submit', function(event) {
-  event.preventDefault(); // Empêche le comportement par défaut du formulaire
+  event.preventDefault();
 
-  // Vérifier si l'utilisateur est connecté
-  var isLogged = localStorage.getItem('isLogged');
+  const isLogged = localStorage.getItem('isLogged');
   if (isLogged !== 'true') {
-      alert('Veuillez vous connecter pour soumettre une question.');
-      window.location.href = 'login.html'; // Rediriger vers la page de connexion
-      return;
+    alert('Veuillez vous connecter pour soumettre une question.');
+    window.location.href = 'login.html';
+    return;
   }
 
-  // Récupérer l'ID de l'utilisateur depuis le localStorage et convertir en entier
-  var userIdString = localStorage.getItem('userId');
-  var userId = parseInt(userIdString, 10);
+  const userIdString = localStorage.getItem('userId');
+  const userId = parseInt(userIdString, 10);
 
-  // Vérifier si userId est un nombre valide
   if (isNaN(userId)) {
-      console.error('Erreur : userId n\'est pas un nombre valide.');
-      // Gérer l'erreur ici, par exemple rediriger l'utilisateur vers une page d'erreur
-      return;
+    console.error('Erreur : userId n\'est pas un nombre valide.');
+    return;
   }
 
-  // Récupérer les valeurs du formulaire
-  var title = document.getElementById('title').value;
-  var content = document.getElementById('content').value;
+  const title = document.getElementById('title').value;
+  const content = document.getElementById('content').value;
 
-  // Vérifier que les champs requis ne sont pas vides
   if (!title || !content) {
-      alert('Veuillez remplir tous les champs.');
-      return;
+    alert('Veuillez remplir tous les champs.');
+    return;
   }
 
-  // Construire l'objet question
-  var questionData = {
-      "title": title,
-      "id_user": userId, // Utiliser l'ID de l'utilisateur
-      "date": "", // Ajouter la date actuelle
-      "content": content
+  const questionData = {
+    "title": title,
+    "id_user": userId,
+    "date": "",
+    "content": content
   };
 
   console.log('Données envoyées à l\'API :', questionData);
 
-  // Options de la requête fetch
-  var requestOptions = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(questionData)
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(questionData)
   };
 
-  // URL de l'API
-  var apiEndpoint = 'http://localhost/GameApp/questions/create'; 
+  const apiEndpoint = 'http://localhost/GameApp/questions/create';
 
-  // Effectuer la requête fetch
   fetch(apiEndpoint, requestOptions)
-      .then(function(response) {
-          if (!response.ok) {
-              return response.json().then(function(err) {
-                  throw new Error('Erreur HTTP ' + response.status + ': ' + (err.message || 'Réponse incorrecte du serveur'));
-              });
-          }
-          return response.json();
-      })
-      .then(function(data) {
-          console.log('Réponse de l\'API :', data);
-
-          // Traiter la réponse de l'API ici
-          alert('Question ajoutée !');
-          document.getElementById('submitQuestionForm').reset();
-          window.location.reload();
-      })
-      .catch(function(error) {
-          console.error('Erreur lors de la requête :', error);
-          // Gérer les erreurs ici, par exemple affichage d'un message d'erreur à l'utilisateur
-          alert('Erreur lors de l\'ajout de la question : ' + error.message); // Exemple d'une alerte d'erreur
-      });
-});
-
-document.getElementById('submitUpdateProfileForm').addEventListener('submit', async function(event) {
-  event.preventDefault(); // Empêche le comportement par défaut du formulaire
-
-  // Récupère les données du formulaire
-  const username = document.getElementById('username').value;
-  const profilePicture = document.getElementById('profilePicture').files[0];
-
-  try {
-      // Télécharge l'image et obtient l'URL depuis Cloudinary
-      const imageUrl = await uploadImageToCloudinary(profilePicture);
-      const email = localStorage.getItem('email'); // Récupère l'email depuis le localStorage
-
-      // Affichage des valeurs dans la console
-      console.log('Username:', username);
-      console.log('Email:', email);
-      console.log('Profile Picture URL:', imageUrl);
-
-      // Prépare les données à envoyer à l'API
-      const data = {
-          mail: email,
-          username: username,
-          password: "1234", // Assurez-vous que cela est sécurisé côté serveur
-          urlPictureProfil: imageUrl // Utilise l'URL sécurisée de l'image téléchargée
-      };
-
-      // URL de l'API
-      const apiEndpoint = 'http://localhost/GameApp/users/update';
-
-      // Options de la requête fetch
-      const requestOptions = {
-          method: 'PUT',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-      };
-
-      // Envoie les données à l'API pour mettre à jour le profil
-      const response = await fetch(apiEndpoint, requestOptions);
-
-      if (response.ok) {
-          console.log('Profile updated successfully');
-      } else {
-          console.error('An error occurred while updating the profile');
+    .then(function(response) {
+      if (!response.ok) {
+        return response.json().then(function(err) {
+          throw new Error('Erreur HTTP ' + response.status + ': ' + (err.message || 'Réponse incorrecte du serveur'));
+        });
       }
-  } catch (error) {
-      console.error('An error occurred:', error);
-  }
+      return response.json();
+    })
+    .then(function(data) {
+      console.log('Réponse de l\'API :', data);
+      alert('Question ajoutée !');
+      document.getElementById('submitQuestionForm').reset();
+      window.location.reload();
+    })
+    .catch(function(error) {
+      console.error('Erreur lors de la requête API :', error);
+      alert('Erreur lors de la requête API : ' + error.message);
+    });
 });
-
-// Fonction pour télécharger l'image vers Cloudinary et obtenir l'URL sécurisée
-async function uploadImageToCloudinary(file) {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', 'gamedbpreset'); // Remplacez par votre upload preset
-
-  const response = await fetch('https://api.cloudinary.com/v1_1/deqqta8v0/image/upload', {
-      method: 'POST', // Utilisation de la méthode POST pour l'upload d'image
-      body: formData
-  });
-
-  if (response.ok) {
-      const result = await response.json();
-      return result.secure_url; // Retourne l'URL sécurisée de l'image
-  } else {
-      throw new Error('Failed to upload image');
-  }
-}

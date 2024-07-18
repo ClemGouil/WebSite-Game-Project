@@ -39,6 +39,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             localStorage.setItem('isLogged', 'true');
             localStorage.setItem('username', data.username);
             localStorage.setItem('email', data.mail);
+            localStorage.setItem('urlPictureProfil', data.urlPictureProfil);
 
             // Effectuer une requête fetch pour obtenir l'ID de l'utilisateur
             var getIdApiEndpoint = `http://localhost/GameApp/users/id/${email}`;

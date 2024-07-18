@@ -265,3 +265,8 @@ a:hover {
   font-weight: bold;
   margin-bottom: 8px;
 }
+
+.uploadedimage {
+  width: 100px;
+  height: 100px;
+}
