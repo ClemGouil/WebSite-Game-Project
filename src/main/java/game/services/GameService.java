@@ -104,6 +104,22 @@ public class GameService {
     }
 
     @GET
+    @ApiOperation(value = "get all answers of a question", notes = "asdasd")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Answer.class, responseContainer="List"),
+    })
+    @Path("/answers/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAnswersOfAQuestion(@PathParam("id") int id) {
+
+        List<Answer> answers = this.gm.getAnswersOfAQuestion(id);
+
+        GenericEntity<List<Answer>> entity = new GenericEntity<List<Answer>>(answers) {};
+        return Response.status(201).entity(entity).build();
+    }
+
+
+    @GET
     @ApiOperation(value = "Get a User ID", notes = "Returns the ID of the user with the given email")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful", response = Integer.class),
@@ -116,6 +132,24 @@ public class GameService {
 
         if (id == -1) {
             return Response.status(404).entity("User not found").build();
+        } else {
+            return Response.status(200).entity(id).build();
+        }
+    }
+
+    @GET
+    @ApiOperation(value = "Get a question ID", notes = "Returns the ID of the question with the given title and id_user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful", response = Integer.class),
+            @ApiResponse(code = 404, message = "Question not found")
+    })
+    @Path("/questions/id/{title}/{id_user}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getQuestionId(@PathParam("title") String title, @PathParam("id_user") int id_user) {
+        int id = this.gm.getIdOfQuestion(title,id_user);
+
+        if (id == -1) {
+            return Response.status(404).entity("Question not found").build();
         } else {
             return Response.status(200).entity(id).build();
         }
@@ -223,6 +257,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(User u) {
 
+        logger.info("ICI");
         User user = this.gm.updateUser(u);
 
         if (user == null) {return Response.status(404).build();}

@@ -11,7 +11,7 @@ document.getElementById('registrationForm').addEventListener('submit', function(
       username: username,
       mail: email,
       password: confirmPassword,
-      urlPictureProfil : "images/profiles/Profile.jpg"
+      urlPictureProfil : "assets/ressource/Profile.jpg"
     };
 
     // Options de la requête fetch

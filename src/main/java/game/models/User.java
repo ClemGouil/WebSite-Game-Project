@@ -16,7 +16,7 @@ public class User {
         this.setMail(mail);
         this.setUsername(username);
         this.setPassword(password);
-        this.setUrlPictureProfil("images/profiles/Profile.jpg");
+        this.setUrlPictureProfil("assets/ressource/Profile.jpg");
     }
 
     public String getMail() {

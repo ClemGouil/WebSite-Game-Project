@@ -45,13 +45,13 @@ public class GameManagerImpl implements GameManager{
 
         try {
             session = FactorySession.openSession();
-            userID = session.getID(u);
+            userID = getIdOfUser(u.getMail());
 
             if (userID == 0) {
                 user = u;
                 user.setPassword(PasswordSecurity.encrypt(user.getPassword()));
                 session.save(user);
-                userID = session.getID(user);             
+                userID = getIdOfUser(u.getMail());      
                 logger.info("new user " + u + " added");
 
             } else {
@@ -118,7 +118,7 @@ public class GameManagerImpl implements GameManager{
 
         try {
             session = FactorySession.openSession();
-            id = session.getID(user);
+            id = getIdOfUser(user.getMail());
 
             if (id == 0) {
                 logger.info("user not found");
@@ -170,20 +170,23 @@ public class GameManagerImpl implements GameManager{
 
         try {
             session = FactorySession.openSession();
-            int i = session.getID(u);
+            int i = getIdOfUser(u.getMail());
+            logger.info("i :" + i);
             if (i == 0) {
                 logger.warn("User doesn't exist");
                 return null;
             }
             test = getUser(i);
+            logger.info("test :" + test);
             u.setPassword(PasswordSecurity.encrypt(u.getPassword()));
             if ((test.getPassword().equals(u.getPassword())) && test.getUsername().equals(u.getUsername())) {
-
+                
                 logger.warn("you don't change anything");
                 return null;
             }
 
             isUpdate = session.update(u);
+            logger.info("ICI" + isUpdate);
             if (isUpdate) {
                 user = u;
                 user.setPassword(PasswordSecurity.decrypt(user.getPassword()));
@@ -208,7 +211,7 @@ public class GameManagerImpl implements GameManager{
         try {
             session = FactorySession.openSession();
             //user = this.authentification(mail, password);
-            id = session.getID(user);
+            id = getIdOfUser(mail);
 
             if (id == 0) {
                 logger.warn("user isn't exist in database");
@@ -269,6 +272,26 @@ public class GameManagerImpl implements GameManager{
             session.close();
         }
         return questions;
+    }
+
+    @Override
+    public int getIdOfQuestion(String  title, int id_user){
+        Session session = null;
+        User a = null;
+        int id = 0;
+
+        try {
+            Question question = new Question();
+            question.setTitle(title);
+            question.setId_user(id_user);
+            session = FactorySession.openSession();
+            id = session.getID(question);
+            return id;
+        } catch (Exception e) {
+        } finally {
+            session.close();
+        }
+        return 0;
     }
 
     @Override
@@ -361,22 +384,22 @@ public class GameManagerImpl implements GameManager{
         return Answers;
     }
 
-    // @Override
-    // public List<Answer> getAnswersOfAQuestion(int id_question) {
-    //     Session session = null;
-    //     List<Answer> Answers = null;
+    @Override
+    public List<Answer> getAnswersOfAQuestion(int id_question) {
+        Session session = null;
+        List<Answer> Answers = null;
     
-    //     try {
-    //         session = FactorySession.openSession();
+        try {
+            session = FactorySession.openSession();
 
-    //         Answers = session.findAllFor(Answer.class, "id_Question", id_question);
-    //         logger.info("Answers are : " + Answers);
-    //     } catch (Exception e) {
-    //     } finally {
-    //         session.close();
-    //     }
-    //     return Answers;
-    // }
+            Answers = session.findAllFor(Answer.class, "id_Question", id_question);
+            logger.info("Answers are : " + Answers);
+        } catch (Exception e) {
+        } finally {
+            session.close();
+        }
+        return Answers;
+    }
     
     @Override
     public Answer updateAnswer(Answer a) {

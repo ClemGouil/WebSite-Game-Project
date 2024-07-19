@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import game.models.User;
 import game.util.ObjectHelper;
 import game.util.QueryHelper;
 
@@ -99,29 +100,91 @@ public class SessionImpl implements Session {
     }
 
     @Override
-    public int getID(Object entity) throws SQLException {
+        public int getID(Object entity) throws SQLException {
+            int id = 0;
+            PreparedStatement pstm = null;
 
-        int id = 0;
-        PreparedStatement pstm = null;
-
-        try {
-            String selectQuery = QueryHelper.createQuerySELECTID(entity);
-            pstm = conn.prepareStatement(selectQuery);
-
-            String [] fields = ObjectHelper.getFields(entity);
-
-            pstm.setObject(1, ObjectHelper.getter(entity, fields[0]));
-            ResultSet result = pstm.executeQuery();
-
-            if (result.next()) {
-                id = result.getInt("id");
+            if (entity instanceof User) {
+                try {
+                    String selectQuery = QueryHelper.createQuerySELECTID(entity);
+                    pstm = conn.prepareStatement(selectQuery);
+        
+                    String [] fields = ObjectHelper.getFields(entity);
+        
+                    pstm.setObject(1, ObjectHelper.getter(entity, fields[0]));
+                    ResultSet result = pstm.executeQuery();
+        
+                    if (result.next()) {
+                        id = result.getInt("id");
+                    }
+        
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } 
+                return id;
             }
+            else {
+            ResultSet result = null;
+            try {
+                String[] fields = ObjectHelper.getFields(entity);
+                List<String> nonNullFields = new ArrayList<>();
+                List<Object> nonNullValues = new ArrayList<>();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Collect non-null fields and their values
+                for (String field : fields) {
+                    Object value = ObjectHelper.getter(entity, field);
+                    if (value != null) {
+                        nonNullFields.add(field);
+                        nonNullValues.add(value);
+                    }
+                }
+
+                // Build the dynamic SELECT query
+                String selectQuery = "SELECT id FROM "  + entity.getClass().getSimpleName().toLowerCase() + " WHERE ";
+                StringBuilder whereClause = new StringBuilder();
+
+                for (int i = 0; i < nonNullFields.size(); i++) {
+                    if (i > 0) {
+                        whereClause.append(" AND ");
+                    }
+                    whereClause.append(nonNullFields.get(i)).append(" = ?");
+                }
+
+                selectQuery += whereClause.toString();
+                pstm = conn.prepareStatement(selectQuery);
+
+                // Set the values for the prepared statement
+                for (int i = 0; i < nonNullValues.size(); i++) {
+                    pstm.setObject(i + 1, nonNullValues.get(i));
+                }
+                logger.info(pstm);
+                result = pstm.executeQuery();
+
+                if (result.next()) {
+                    id = result.getInt("id");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (result != null) {
+                    try {
+                        result.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (pstm != null) {
+                    try {
+                        pstm.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return id;
         }
-        return id;
-    }
+        }
 
     public boolean update(Object object) throws SQLException {
 
@@ -143,6 +206,7 @@ public class SessionImpl implements Session {
                 pstm.setObject(i++, ObjectHelper.getter(object, field));
             }
             pstm.setObject(n+1, id);
+            logger.info(pstm);
             pstm.executeQuery();
         } catch (Exception e) {
             return false;

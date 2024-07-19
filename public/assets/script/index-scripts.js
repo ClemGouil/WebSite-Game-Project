@@ -164,6 +164,19 @@ async function fetchQuestions() {
   }
 }
 
+async function fetchAnswers() {
+  try {
+    const questionIdString = localStorage.getItem('questionId');
+    const questionId = parseInt(questionIdString, 10);
+    const apiEndpoint = 'http://localhost/GameApp/answers/' + questionId; 
+    const response = await fetch(apiEndpoint);
+    const answers = await response.json();
+    displayAnswers(answers);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des answers:', error);
+  }
+}
+
 async function getUserById(id) {
   try {
     const apiEndpoint = 'http://localhost/GameApp/users/' + id; 
@@ -195,6 +208,41 @@ async function displayQuestions(questions) {
   }
 }
 
+async function displayAnswers(answers) {
+  const container = document.getElementById('answers-container');
+  container.innerHTML = ''; // Clear existing content
+
+  for (const answer of answers) {
+    try {
+      const user = await getUserById(answer.id_user);
+      const username = user.username;
+      const urlPictureProfil = user.urlPictureProfil;
+      createAnswerCard(container, answer, username, urlPictureProfil);
+    } catch (error) {
+      console.error(`Erreur lors de la récupération de l'utilisateur avec l'ID ${answer.id_user}:`, error);
+      const username = 'Utilisateur inconnu';
+      createAnswerCard(container, answer, username, 'assets/ressource/Profile.jpg'); // Default profile picture
+    }
+  }
+}
+
+function createAnswerCard(container, answer, username, urlPictureProfil) {
+  const card = document.createElement('div');
+  card.className = 'answer-card';
+
+  card.innerHTML = `
+    <img src="${urlPictureProfil}" alt="Photo de profil" class="profile-pic">
+    <div class="answer-content">
+      <div class="username">${username}</div>
+      <p>${answer.content}</p>
+      <div class="answer-date">${answer.date}</div>
+    </div>
+  `;
+
+  container.appendChild(card);
+}
+
+
 function createQuestionCard(container, question, username, urlPictureProfil) {
   const card = document.createElement('div');
   card.className = 'question-card';
@@ -207,6 +255,38 @@ function createQuestionCard(container, question, username, urlPictureProfil) {
       <p>${truncateText(question.content, 100)}</p>
     </div>
   `;
+  card.addEventListener('click', () => {
+    showPage("question-details");
+    document.getElementById('question-username').innerText = username;
+    document.getElementById('question-title').innerText = question.title;
+    document.getElementById('question-description').innerText = question.content;
+    document.getElementById('question-profile-pic').src = urlPictureProfil;
+
+    var getIdApiEndpoint = `http://localhost/GameApp/questions/id/${question.title}/${question.id_user}`;
+
+    fetch(getIdApiEndpoint)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur HTTP ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Supposons que l'ID de la question soit renvoyé directement dans la réponse JSON
+            const questionId = data; // Si `data` est l'ID directement
+            // Si `data` est un objet contenant l'ID, utilisez : `const questionId = data.id;`
+            console.log('ID de la question :', questionId);
+            localStorage.setItem('questionId',questionId);
+
+            // Vous pouvez maintenant utiliser `questionId` selon vos besoins
+        })
+        .catch(error => {
+            console.error('Erreur lors de la requête API :', error);
+            alert('Erreur lors de la requête API : ' + error.message);
+        });
+        fetchAnswers();
+
+});
   container.appendChild(card);
 }
 
@@ -282,3 +362,72 @@ document.getElementById('submitQuestionForm').addEventListener('submit', functio
       alert('Erreur lors de la requête API : ' + error.message);
     });
 });
+
+
+document.getElementById('submitAnswerForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const isLogged = localStorage.getItem('isLogged');
+  if (isLogged !== 'true') {
+    alert('Veuillez vous connecter pour soumettre une réponse.');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  const userIdString = localStorage.getItem('userId');
+  const userId = parseInt(userIdString, 10);
+  const questionIdString = localStorage.getItem('questionId');
+  const questionId = parseInt(questionIdString, 10);
+
+  if (isNaN(userId)) {
+    console.error('Erreur : userId n\'est pas un nombre valide.');
+    return;
+  }
+
+  const content = document.getElementById('answer').value;
+
+  if (!content) {
+    alert('Veuillez remplir tous les champs.');
+    return;
+  }
+
+  const answerData = {
+    "id_question": questionId,
+    "id_user": userId,
+    "date": "",
+    "content": content
+  };
+
+  console.log('Données envoyées à l\'API :', answerData);
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(answerData)
+  };
+
+  const apiEndpoint = 'http://localhost/GameApp/answers/create';
+
+  fetch(apiEndpoint, requestOptions)
+    .then(function(response) {
+      if (!response.ok) {
+        return response.json().then(function(err) {
+          throw new Error('Erreur HTTP ' + response.status + ': ' + (err.message || 'Réponse incorrecte du serveur'));
+        });
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      console.log('Réponse de l\'API :', data);
+      alert('Answer ajoutée !');
+      document.getElementById('submitAnswerForm').reset();
+      window.location.reload();
+    })
+    .catch(function(error) {
+      console.error('Erreur lors de la requête API :', error);
+      alert('Erreur lors de la requête API : ' + error.message);
+    });
+});
+

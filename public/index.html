@@ -104,9 +104,42 @@
                   <h3>Titre de la question</h3>
                   <p>Description de la question... (troncature si nécessaire)</p>
                 </div>
-            </div>
           </div>
+        </div>
       </section>
+
+      <section id="question-details" class="page">
+        <div class="answer-card">
+            <img id="question-profile-pic" class="profile-pic" src="assets/ressource/Profile.jpg" alt="Photo de profil">
+            <div class="question-content">
+                <div class="username" id="question-username">Nom d'utilisateur</div>
+                <h3 id="question-title">Titre de la question</h3>
+                <p id="question-description">Description de la question... (troncature si nécessaire)</p>
+            </div>
+        </div>
+        <div id="answers-container">
+            <!-- Les réponses des autres utilisateurs seront générées ici -->
+            <div class="answer-card">
+                <img src="assets/ressource/Profile.jpg" alt="Photo de profil" class="profile-pic">
+                <div class="answer-content">
+                    <div class="username">Nom d'utilisateur</div>
+                    <p>Réponse de l'utilisateur... (troncature si nécessaire)</p>
+                    <div class="answer-date">Date de la réponse</div>
+                </div>
+            </div>
+            <!-- Ajouter plus d'éléments .answer-card ici si nécessaire -->
+        </div>
+        <div class="form-container">
+            <form id="submitAnswerForm">
+                <div class="form-group">
+                    <label for="answer">Répondre :</label>
+                    <textarea id="answer" name="answer" required></textarea>
+                </div>
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </section>
+      
     </main>
   </div>
   <script src="assets/script/index-scripts.js"></script>
